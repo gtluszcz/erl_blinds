@@ -8,24 +8,21 @@ name() ->
 init() ->
     ets:new(name(), [set, named_table]),
     ets:insert(name(), {height, 0}),
+    timer:apply_interval(1000,blind,move,name()),
     listen().
 
 listen() ->
     receive
-        {up, ok} -> up(5), level(), listen();
-        {down, ok} -> down(5), level(), listen()
+        {up, ok} -> move(5), level(), listen();
+        {down, ok} -> move(-5), level(), listen()
     end.
 
 level() -> 
     [{height, Height}] = ets:lookup(name(), height),
     io:format("~p ~p ~n", [name(), Height]).
-
-up(By) -> 
+   
+move(By) -> 
     [{height, Height}] = ets:lookup(name(), height),
     ets:delete(name(), height),
     ets:insert(name(), {height, Height + By}).
 
-down(By) -> 
-    [{height, Height}] = ets:lookup(name(), height),
-    ets:delete(name(), height),
-    ets:insert(name(), {height, Height - By}).
