@@ -3,7 +3,15 @@
 -export([init/1]).
 
 init(Blinds) ->
-  Dispatch = cowboy_router:compile([{'_', [
-    {"/", hello_handler, []}
-  ]}]),
-  cowboy:start_http(my_http_listener, 100, [{port, 8080}], [{env, [{dispatch, Dispatch}]}]).
+  ets:new(hub, [set, named_table]),
+  ets:insert(hub, {blinds, Blinds}),
+  listen().
+
+listen() ->
+  receive
+    {Action, Index, ok} -> send_to_blind(Action, Index), listen()
+  end.
+
+send_to_blind(Action, Index) ->
+  [{blinds, Blinds}] = ets:lookup(hub, blinds),
+  lists:nth(Index, Blinds) ! {Action, ok}.

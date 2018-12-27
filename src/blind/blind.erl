@@ -1,5 +1,7 @@
 -module(blind).
 
+-include("../constants.hrl").
+
 -export([init/0]).
 
 name() -> list_to_atom("blind" ++ pid_to_list(self())).
@@ -34,7 +36,7 @@ move() ->
 move(By, Height) when By < 0 andalso Height > 0 ->
   ets:delete(name(), height),
   ets:insert(name(), {height, Height + By});
-move(By, Height) when By > 0 andalso Height < 100 ->
+move(By, Height) when By > 0 andalso Height < ?BLIND_HEIGHT ->
   ets:delete(name(), height),
   ets:insert(name(), {height, Height + By});
 move(_, _) -> void.

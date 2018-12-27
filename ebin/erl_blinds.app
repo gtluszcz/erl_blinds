@@ -1,7 +1,7 @@
 {application, 'erl_blinds', [
-	{description, "New project"},
+	{description, "Blinds Controller"},
 	{vsn, "0.1.0"},
-	{modules, ['erl_blinds_app','erl_blinds_sup','hello_handler']},
+	{modules, ['blind','erl_blinds_app','erl_blinds_sup','hub','remote','remote_handler','test']},
 	{registered, [erl_blinds_sup]},
 	{applications, [kernel,stdlib,cowboy]},
 	{mod, {erl_blinds_app, []}},

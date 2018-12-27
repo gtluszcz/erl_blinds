@@ -1,0 +1,1 @@
+-define(BLIND_HEIGHT, 100).
