@@ -15,6 +15,7 @@ listen() ->
     receive
         {up, ok} -> set_movement(1), listen();
         {down, ok} -> set_movement(-1), listen();
+        {stop, ok} -> set_movement(0), listen();
         {move, ok} -> move(),level(), listen()
     end.
 
@@ -30,7 +31,6 @@ move() ->
     [{movement, By}] = ets:lookup(name(), movement),
     [{height, Height}] = ets:lookup(name(), height),
     move(By, Height).
-
 move(By, Height) when By < 0 andalso Height > 0 -> 
     ets:delete(name(), height),
     ets:insert(name(), {height, Height + By});

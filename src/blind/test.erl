@@ -7,6 +7,7 @@ main() ->
     Blind2 = spawn(blind, init, []),
     Blind1!{up, ok},
     Blind2!{down, ok},
+    timer:send_after(2000,Blind1,{down, ok}),
     ok.
 
 %   Hub = spawn(?MODULE, hub, [Blind]),
