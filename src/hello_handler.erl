@@ -1,22 +1,19 @@
 -module(hello_handler).
 -behaviour(cowboy_http_handler).
 
--export([init/3]).
--export([handle/2]).
--export([terminate/3]).
+-export([init/3, handle/2, terminate/3]).
 
--record(state, {
-}).
+-record(state, {}).
 
-init(_, Req, _Opts) ->
-    {ok, Req, #state{}}.
+init(_, Req, _Opts) -> {ok, Req, #state{}}.
 
-handle(Req, State=#state{}) ->
-    {ok, Req2} = cowboy_req:reply(200,
-        [{<<"content-type">>, <<"text/plain">>}],
-        <<"Hello Erlang!">>,
-        Req),
-    {ok, Req2, State}.
+handle(Req, State = #state{}) ->
+  {ok, Req2} = cowboy_req:reply(
+    200,
+    [{<<"content-type">>, <<"text/plain">>}],
+    <<"Hello Erlang!">>,
+    Req
+  ),
+  {ok, Req2, State}.
 
-terminate(_Reason, _Req, _State) ->
-    ok.
+terminate(_Reason, _Req, _State) -> ok.
