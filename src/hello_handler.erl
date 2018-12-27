@@ -9,7 +9,7 @@
 }).
 
 init(_, Req, _Opts) ->
-	{ok, Req, #state{}}.
+    {ok, Req, #state{}}.
 
 handle(Req, State=#state{}) ->
     {ok, Req2} = cowboy_req:reply(200,
@@ -19,4 +19,4 @@ handle(Req, State=#state{}) ->
     {ok, Req2, State}.
 
 terminate(_Reason, _Req, _State) ->
-	ok.
+    ok.
