@@ -16,11 +16,10 @@ listen() ->
   end.
 
 change_mode(Mode) ->
-  ets:delete(hub, mode),
   ets:insert(hub, {mode, Mode}).
 
 get_mode() ->
-  {mode, Mode} = ets:lookup(hub, mode),
+  [{mode, Mode}] = ets:lookup(hub, mode),
   Mode.
 
 process_remote(Action, Index) -> process_remote(Action, Index, get_mode()).

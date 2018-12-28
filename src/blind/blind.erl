@@ -27,7 +27,6 @@ level() ->
   Height.
 
 set_movement(By) ->
-  ets:delete(name(), movement),
   ets:insert(name(), {movement, By}).
 
 move() ->
@@ -36,6 +35,5 @@ move() ->
   move(By, Height).
 
 move(By, Height) when Height + By >= 0 andalso Height + By =< ?BLIND_HEIGHT ->
-  ets:delete(name(), height),
   ets:insert(name(), {height, Height + By});
 move(_, _) -> void.
