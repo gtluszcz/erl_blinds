@@ -26,5 +26,5 @@ create_server(Name, Paths, Port, Options) ->
     Name,
     100,
     [{port, Port}],
-    [{env, [{dispatch, Dispatch}]}] ++ Options
+    [{env, [{dispatch, Dispatch}]}, {middlewares, [cowboy_router, middleware_cors, cowboy_handler]}] ++ Options
   ).

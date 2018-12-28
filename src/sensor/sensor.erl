@@ -18,14 +18,14 @@ send_to_hub(Hub) ->
   Hub ! {Level, sun, ok}.
 
 set_random_sun() ->
-    [{sun, Level}] = ets:lookup(sensor, sun),
-    Diff = (rand:uniform() - 0.5) * 30,
-    set_random_sun(Diff + Level).
-set_random_sun(Level) when Level > 100 -> 
-    set_random_sun(100);
-set_random_sun(Level) when Level < 0 -> 
-    set_random_sun(0);
+  [{sun, Level}] = ets:lookup(sensor, sun),
+  Diff = (rand:uniform() - 0.5) * 30,
+  set_random_sun(Diff + Level).
+set_random_sun(Level) when Level > 100 ->
+  set_random_sun(100);
+set_random_sun(Level) when Level < 0 ->
+  set_random_sun(0);
 set_random_sun(Level) ->
-    ets:delete(sensor, sun),
-    ets:insert(sensor, {sun, Level}),
-    Level.
+  ets:delete(sensor, sun),
+  ets:insert(sensor, {sun, Level}),
+  Level.

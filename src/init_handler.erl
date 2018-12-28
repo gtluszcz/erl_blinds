@@ -5,7 +5,7 @@
 
 init(_, Req, _Opts) -> {ok, Req, #{}}.
 
-handle(Req, _) ->
+handlePost(Req) ->
   N = request:get(n, Req, integer),
 
   Hub = spawn(hub, init, [
@@ -19,5 +19,12 @@ handle(Req, _) ->
   spawn(sensor, init, [Hub]),
 
   helpers:json_ok_response(Req).
+
+handle(Req, _) ->
+  case request:method(Req) of
+    post -> handlePost(Req);
+    options -> helpers:json_response(Req, "", 204);
+    _ -> helpers:json_response(Req, "{\"status\": \"Method not supported\"}", 500)
+  end.
 
 terminate(_Reason, _Req, _State) -> ok.

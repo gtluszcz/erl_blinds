@@ -22,13 +22,20 @@ get_mode() ->
   [{mode, Mode}] = ets:lookup(hub, mode),
   Mode.
 
+process_remote(Action, all) ->
+  [{blinds, Blinds}] = ets:lookup(hub, blinds),
+  Mode = get_mode(),
+  lists:foreach(
+    fun(Index) -> process_remote(Action, Index, Mode) end,
+    lists:seq(1, length(Blinds))
+  );
 process_remote(Action, Index) -> process_remote(Action, Index, get_mode()).
 process_remote(Action, Index, Mode) when Mode =:= manual ->
   send_to_blind_index(Action, Index);
 process_remote(_, _, _) -> void.
 
 process_sun(Level) -> process_sun(Level, get_mode()).
-process_sun(Level, Mode) when Mode =:= auto -> 
+process_sun(Level, Mode) when Mode =:= auto ->
   send_to_all_blinds(Level);
 process_sun(_, _) -> void.
 

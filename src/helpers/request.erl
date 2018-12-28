@@ -1,6 +1,10 @@
 -module(request).
 
--export([get/3]).
+-export([get/3, method/1]).
+
+method(Req) ->
+  {Method, _} = cowboy_req:method(Req),
+  list_to_atom(string:lowercase(binary_to_list(Method))).
 
 get(Key, Req) ->
   {ok, KeyValues, _} = cowboy_req:body_qs(Req),
