@@ -5,6 +5,7 @@
 init(Blinds) ->
   ets:new(hub, [set, named_table]),
   ets:insert(hub, {blinds, Blinds}),
+  run_server(Blinds),
   listen().
 
 listen() ->
@@ -15,3 +16,14 @@ listen() ->
 send_to_blind(Action, Index) ->
   [{blinds, Blinds}] = ets:lookup(hub, blinds),
   lists:nth(Index, Blinds) ! {Action, ok}.
+
+run_server(Blinds) ->
+  Dispatch = cowboy_router:compile([{'_', [
+    {"/status", status_handler, []}
+  ]}]),
+  cowboy:start_http(
+    hub_listener,
+    100,
+    [{port, 8081}],
+    [{env, [{dispatch, Dispatch}]}, {onrequest, fun(Req) -> cowboy_req:set_meta(blinds, Blinds, Req) end}]
+  ).

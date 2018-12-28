@@ -8,7 +8,6 @@
 init(_, Req, _Opts) -> {ok, Req, #state{}}.
 
 handle_change(Index, Action, Hub) ->
-  % io:format(">>>>>> ~p ~p ~n", [Index, Action]),
   Hub ! {Action, Index, ok}.
 
 handle(Req, State = #state{}) ->
