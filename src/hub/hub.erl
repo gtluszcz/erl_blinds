@@ -18,12 +18,6 @@ send_to_blind(Action, Index) ->
   lists:nth(Index, Blinds) ! {Action, ok}.
 
 run_server(Blinds) ->
-  Dispatch = cowboy_router:compile([{'_', [
+  helpers:create_server(hub_listener, [
     {"/status", status_handler, []}
-  ]}]),
-  cowboy:start_http(
-    hub_listener,
-    100,
-    [{port, 8081}],
-    [{env, [{dispatch, Dispatch}]}, {onrequest, fun(Req) -> cowboy_req:set_meta(blinds, Blinds, Req) end}]
-  ).
+  ], 8081, [{onrequest, fun(Req) -> cowboy_req:set_meta(blinds, Blinds, Req) end}]).

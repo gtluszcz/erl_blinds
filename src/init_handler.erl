@@ -3,11 +3,9 @@
 
 -export([init/3, handle/2, terminate/3]).
 
--record(state, {}).
+init(_, Req, _Opts) -> {ok, Req, #{}}.
 
-init(_, Req, _Opts) -> {ok, Req, #state{}}.
-
-handle(Req, State = #state{}) ->
+handle(Req, _) ->
   N = request:get(n, Req, integer),
 
   Hub = spawn(hub, init, [
@@ -19,12 +17,6 @@ handle(Req, State = #state{}) ->
 
   spawn(remote, init, [Hub]),
 
-  {ok, Req3} = cowboy_req:reply(
-    200,
-    [{<<"content-type">>, <<"application/json">>}],
-    <<"{\"status\": \"ok\"}">>,
-    Req
-  ),
-  {ok, Req3, State}.
+  helpers:json_ok_response(Req).
 
 terminate(_Reason, _Req, _State) -> ok.

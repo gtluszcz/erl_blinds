@@ -5,12 +5,6 @@
 init(Hub) -> run_server(Hub).
 
 run_server(Hub) ->
-  Dispatch = cowboy_router:compile([{'_', [
+  helpers:create_server(remote_listener, [
     {"/control", remote_handler, []}
-  ]}]),
-  cowboy:start_http(
-    remote_listener,
-    100,
-    [{port, 8080}],
-    [{env, [{dispatch, Dispatch}]}, {onrequest, fun(Req) -> cowboy_req:set_meta(hub, Hub, Req) end}]
-  ).
+  ], 8080, [{onrequest, fun(Req) -> cowboy_req:set_meta(hub, Hub, Req) end}]).

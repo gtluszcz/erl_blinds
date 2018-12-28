@@ -9,14 +9,8 @@ start(_Type, _Args) ->
   erl_blinds_sup:start_link().
 
 run_server() ->
-  Dispatch = cowboy_router:compile([{'_', [
+  helpers:create_server(init_listener, [
     {"/init", init_handler, []}
-  ]}]),
-  cowboy:start_http(
-    init_listener,
-    100,
-    [{port, 8082}],
-    [{env, [{dispatch, Dispatch}]}]
-  ).
+  ], 8082).
 
 stop(_State) -> ok.

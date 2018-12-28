@@ -3,9 +3,7 @@
 
 -export([init/3, handle/2, terminate/3]).
 
--record(state, {}).
-
-init(_, Req, _Opts) -> {ok, Req, #state{}}.
+init(_, Req, _Opts) -> {ok, Req, #{}}.
 
 get_blind_level(Blind) ->
   Blind ! {level, self(), ok},
@@ -13,7 +11,7 @@ get_blind_level(Blind) ->
     {level, Level, ok} -> Level
   end.
 
-handle(Req, State = #state{}) ->
+handle(Req, _) ->
   {Blinds, _} = cowboy_req:meta(blinds, Req),
 
   ResponseBody = helpers:pipe(Blinds, [
@@ -21,16 +19,9 @@ handle(Req, State = #state{}) ->
     fun(X) -> lists:map(fun(Y) -> io_lib:format("~p", [Y]) end, X) end,
     fun(X) -> lists:map(fun(Y) -> lists:nth(1, Y) end, X) end,
     fun(X) -> string:join(X, ",") end,
-    fun(X) -> "{\"levels\": [" ++ X ++ "]}" end,
-    fun(X) -> list_to_binary(X) end
+    fun(X) -> "{\"levels\": [" ++ X ++ "]}" end
   ]),
 
-  {ok, Req3} = cowboy_req:reply(
-    200,
-    [{<<"content-type">>, <<"application/json">>}],
-    ResponseBody,
-    Req
-  ),
-  {ok, Req3, State}.
+  helpers:json_response(Req, ResponseBody).
 
 terminate(_Reason, _Req, _State) -> ok.
