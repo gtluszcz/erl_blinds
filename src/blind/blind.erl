@@ -18,7 +18,7 @@ listen() ->
     {down, ok} -> set_movement(-1), listen();
     {stop, ok} -> set_movement(0), listen();
     {move, ok} -> move(), listen();
-    {TargetLevel, ok} -> void;%TODO
+    {TargetLevel, ok} -> void; %% @TODO: Implement moving to the target level
     {level, Pid, ok} -> Pid ! {level, level(), ok}, listen()
   end.
 
