@@ -16,15 +16,17 @@ get_blind_level(Blind) ->
 handle(Req, State = #state{}) ->
   {Blinds, _} = cowboy_req:meta(blinds, Req),
 
-  ResponseLevels1 = lists:map(fun(X) -> get_blind_level(X) end, Blinds),
-  ResponseLevels2 = lists:map(fun(X) -> lists:nth(1, io_lib:format("~p", [X])) end, ResponseLevels1),
-  ResponseLevels3 = string:join(ResponseLevels2, ","),
-  ResponseLevels4 = "{\"levels\": [" ++ ResponseLevels3 ++ "]}",
+  X1 = lists:map(fun get_blind_level/1, Blinds),
+  X2 = lists:map(fun(X) -> io_lib:format("~p", [X]) end, X1),
+  X3 = lists:map(fun(X) -> lists:nth(1, X) end, X2),
+  X4 = string:join(X3, ","),
+  X5 = "{\"levels\": [" ++ X4 ++ "]}",
+  X6 = list_to_binary(X5),
 
   {ok, Req3} = cowboy_req:reply(
     200,
     [{<<"content-type">>, <<"application/json">>}],
-    list_to_binary(ResponseLevels4),
+    X6,
     Req
   ),
   {ok, Req3, State}.

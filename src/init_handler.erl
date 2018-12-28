@@ -8,12 +8,13 @@
 init(_, Req, _Opts) -> {ok, Req, #state{}}.
 
 handle(Req, State = #state{}) ->
-  {ok, KeyValues, _} = cowboy_req:body_qs(Req),
-
-  {_, N} = lists:keyfind(<<"n">>, 1, KeyValues),
+  N = request:get(n, Req, integer),
 
   Hub = spawn(hub, init, [
-    lists:map(fun (_) -> spawn(blind, init, []) end, lists:seq(1, list_to_integer(binary_to_list(N))))
+    lists:map(
+      fun (_) -> spawn(blind, init, []) end,
+      lists:seq(1, N)
+    )
   ]),
 
   spawn(remote, init, [Hub]),
