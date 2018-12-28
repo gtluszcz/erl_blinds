@@ -39,8 +39,8 @@ send_to_blind_index(Action, Index) ->
   [{blinds, Blinds}] = ets:lookup(hub, blinds),
   send_to_blind(Action, lists:nth(Index, Blinds)).
 
-send_to_blind(Action, Blind) ->
-  Blind ! {Action, ok}.
+send_to_blind(ActionOrLevel, Blind) ->
+  Blind ! {ActionOrLevel, ok}.
 
 run_server(Blinds) ->
   helpers:create_server(hub_listener, [
