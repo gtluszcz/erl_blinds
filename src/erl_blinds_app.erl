@@ -4,13 +4,19 @@
 -export([start/2, stop/1]).
 
 start(_Type, _Args) ->
-  Blind1 = spawn(blind, init, []),
-  Blind2 = spawn(blind, init, []),
-
-  Hub = spawn(hub, init, [[Blind1, Blind2]]),
-
-  spawn(remote, init, [Hub]),
+  run_server(),
 
   erl_blinds_sup:start_link().
+
+run_server() ->
+  Dispatch = cowboy_router:compile([{'_', [
+    {"/init", init_handler, []}
+  ]}]),
+  cowboy:start_http(
+    init_listener,
+    100,
+    [{port, 8082}],
+    [{env, [{dispatch, Dispatch}]}]
+  ).
 
 stop(_State) -> ok.
