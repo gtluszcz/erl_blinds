@@ -16,6 +16,7 @@ handle(Req, _) ->
   ]),
 
   spawn(remote, init, [Hub]),
+  spawn(sensor, init, [Hub]),
 
   helpers:json_ok_response(Req).
 
