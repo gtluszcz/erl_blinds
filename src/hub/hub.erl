@@ -10,9 +10,9 @@ init(Blinds) ->
 
 listen() ->
   receive
-    {Action, Index, ok} -> process_remote(Action, Index), listen();
     {Mode, mode, ok} -> change_mode(Mode), listen();
-    {Level, sun, ok} -> process_sun(Level), listen()
+    {Level, sun, ok} -> process_sun(Level), listen();
+    {Action, Index, ok} -> process_remote(Action, Index), listen()
   end.
 
 change_mode(Mode) ->
@@ -28,7 +28,8 @@ process_remote(Action, Index, Mode) when Mode =:= manual ->
 process_remote(_, _, _) -> void.
 
 process_sun(Level) -> process_sun(Level, get_mode()).
-process_sun(Level, Mode) when Mode =:= auto -> send_to_all_blinds(Level);
+process_sun(Level, Mode) when Mode =:= auto -> 
+  send_to_all_blinds(Level);
 process_sun(_, _) -> void.
 
 send_to_all_blinds(Level) ->

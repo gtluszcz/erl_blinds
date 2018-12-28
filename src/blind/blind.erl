@@ -27,8 +27,7 @@ level() ->
   Height.
 
 set_target_to_current() ->
-  [{target, TargetLevel}] = ets:lookup(name(), target),
-  set_target(TargetLevel).
+  set_target(level()).
 
 set_target(TargetLevel) ->
   ets:insert(name(), {target, TargetLevel}).
