@@ -9,17 +9,8 @@ start(_Type, _Args) ->
 
   Hub = spawn(hub, init, [[Blind1, Blind2]]),
 
-  Remote = spawn(remote, init, [Hub]),
+  spawn(remote, init, [Hub]),
 
-  Dispatch = cowboy_router:compile([{'_', [
-    {"/control", remote_handler, []}
-  ]}]),
-  cowboy:start_http(
-    http_listener,
-    100,
-    [{port, 8080}],
-    [{env, [{dispatch, Dispatch}]}]
-  ),
   erl_blinds_sup:start_link().
 
 stop(_State) -> ok.
