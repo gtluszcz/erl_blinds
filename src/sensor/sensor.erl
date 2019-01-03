@@ -9,9 +9,9 @@ init(Hub) ->
   listen(Hub).
 
 listen(Hub) ->
-    receive
-        {emit, ok} -> send_to_hub(Hub), listen(Hub)
-    end.
+  receive
+    {emit, ok} -> send_to_hub(Hub), listen(Hub)
+  end.
 
 send_to_hub(Hub) ->
   Level = set_random_sun(),
